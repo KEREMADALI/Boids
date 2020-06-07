@@ -10,7 +10,7 @@ namespace FlockBehaviours
         private float m_SmoothTime = 0.7f;
         private Vector2 m_Velocity;
 
-        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours)
+        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours, List<Transform> obstacles)
         {
             var cohesionVector = Vector2.zero;
 

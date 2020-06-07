@@ -5,7 +5,7 @@ using System.Linq;
 [RequireComponent(typeof(CircleCollider2D))]
 public class Bird
 {
-    private readonly float m_NeighbourRadius = 1f;
+    private readonly float s_NeighbourRadius = 1f;
 
     private List<Transform> m_Neighbours;
     private SpriteRenderer m_SpriteRenderer;
@@ -34,11 +34,11 @@ public class Bird
         Transform.position += (Vector3)(velocity * velocityVector * Time.deltaTime);
     }
 
-    internal List<Transform> GetNeighbours()
+    internal List<Transform> GetNeighbours(int angleOfView)
     {
         m_Neighbours.Clear();
 
-        var neighbourColliders = Physics2D.OverlapCircleAll(Transform.position, m_NeighbourRadius);
+        var neighbourColliders = Physics2D.OverlapCircleAll(Transform.position, s_NeighbourRadius);
 
         if (neighbourColliders == null)
         {
@@ -55,14 +55,21 @@ public class Bird
             m_Neighbours.Remove(Transform);
         }
 
-        var neighboursBehind = GetNeighboursBehind(Transform, m_Neighbours);
+        var neighboursBehind = GetNeighboursBehind(Transform, m_Neighbours, angleOfView);
         m_Neighbours = m_Neighbours.Except(neighboursBehind).ToList();
 
         return m_Neighbours;
     }
 
-    private IEnumerable<Transform> GetNeighboursBehind(Transform localTransform, List<Transform> neighbours)
+    private IEnumerable<Transform> GetNeighboursBehind(
+        Transform localTransform, 
+        List<Transform> neighbours, 
+        int angleOfView)
     {
+        var blindAngle = (360 - angleOfView) / 2;
+        var fieldOfViewMaxAngle = 270 + blindAngle;
+        var fieldOfViewMinAngle = 270 - blindAngle;
+
         var neighboursBehind = new List<Transform>();
 
         if (!neighbours.Any())
@@ -77,7 +84,7 @@ public class Bird
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             angle = (angle + 360) % 360; 
 
-            if (angle > 210 && angle < 330)
+            if (angle > fieldOfViewMinAngle && angle < fieldOfViewMaxAngle)
             {
                 neighboursBehind.Add(neighbour);
             }

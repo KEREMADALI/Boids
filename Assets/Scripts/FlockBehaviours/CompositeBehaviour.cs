@@ -17,11 +17,12 @@ namespace FlockBehaviours
                 new AlignmentBehaviour(),
                 new AvoidanceBehaviour(),
                 new CohesionBehaviour(),
-                new LimitAvoidanceBehaviour(flock.LimitRadius, flock.InputCenter)
+                new LimitAvoidanceBehaviour(flock.FlightArea, flock.InputCenter),
+                //new ObstacleAvoidanceBehaviour()
             };
         }
 
-        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours)
+        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles)
         {
             var moveVector = Vector2.zero;
 
@@ -32,7 +33,7 @@ namespace FlockBehaviours
 
             foreach (var behaviour in m_Behaviours)
             {
-                moveVector += behaviour.CalculateMove(transform, neighbours);
+                moveVector += behaviour.CalculateMove(transform, neighbours, obstacles);
             }
 
             return moveVector;

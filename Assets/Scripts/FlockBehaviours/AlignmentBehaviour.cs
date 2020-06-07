@@ -7,7 +7,7 @@ namespace FlockBehaviours
 {
     public class AlignmentBehaviour : IFlockBehaviour
     {
-        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours)
+        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles)
         {
             Vector2 alignmentVector = transform.up;
 

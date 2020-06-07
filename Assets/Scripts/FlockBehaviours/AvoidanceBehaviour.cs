@@ -9,7 +9,7 @@ namespace FlockBehaviours
     {
         private const float s_AvoidanceDistance = 0.5f;
 
-        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours)
+        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours, List<Transform> obstacles)
         {
             Vector2 avoidanceVector = Vector2.zero;
 
