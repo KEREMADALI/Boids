@@ -29,8 +29,6 @@ namespace FlockBehaviours
 
             cohesionVector = Vector2.SmoothDamp(birdTransform.up, cohesionVector, ref m_Velocity, m_SmoothTime);
 
-            Debug.Log($"Cohesion vector: {cohesionVector.magnitude}");
-
             return cohesionVector;
         }
     }

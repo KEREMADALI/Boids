@@ -1,6 +1,8 @@
 ﻿
 using FlockBehaviours;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 public class Flock : MonoBehaviour
@@ -10,10 +12,6 @@ public class Flock : MonoBehaviour
     public Transform FlightArea;
     public float Velocity;
     public int NumberOfBirds;
-    [Range(180,360)]
-    public int AngleOfView;
-
-    internal int LimitRadius;
 
     private IFlockBehaviour m_Behaviour;
     private List<Bird> m_Birds;
@@ -53,11 +51,11 @@ public class Flock : MonoBehaviour
         for (var i = 0; i < NumberOfBirds; i++)
         {
             // Get random initialization values
-            var randomPosition = new Vector3(Random.Range(-m_XMax, m_XMax), Random.Range(-m_YMax, m_YMax));
-            var randomRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
+            var randomPosition = new Vector3(UnityEngine.Random.Range(-m_XMax, m_XMax), UnityEngine.Random.Range(-m_YMax, m_YMax));
+            var randomRotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360)));
             var bird = InitBird("Bird_" + i, randomPosition, randomRotation);
             m_Birds.Add(bird);
-        }   
+        } 
     }
 
     /// <summary>
@@ -70,13 +68,12 @@ public class Flock : MonoBehaviour
     private Bird InitBird(string name, Vector3 position, Quaternion rotation)
     {
         // Instantiate a new bird
-        var birdObject = Instantiate(BirdPrefab, position, rotation);
+        var birdObject = Instantiate(BirdPrefab, position, rotation, transform);
         birdObject.name = name;
 
         // Add bird into list
         var birdTransform = birdObject.transform;
-        var birdSpriteRenderer = birdObject.GetComponent<SpriteRenderer>();
-        Bird birdScript = new Bird(birdTransform, birdSpriteRenderer);
+        Bird birdScript = new Bird(birdTransform);
 
         return birdScript;
     }
@@ -88,10 +85,10 @@ public class Flock : MonoBehaviour
     {
         foreach (var bird in m_Birds)
         {
-            var neighbours = bird.GetNeighbours(AngleOfView);
+            var neighbours = bird.GetNeighbours();
             var moveVector = m_Behaviour.CalculateMove(bird.Transform, neighbours, null);
             bird.Move(moveVector, Velocity);
-        }
+        } 
     }
 
     /// <summary>
@@ -107,7 +104,7 @@ public class Flock : MonoBehaviour
         // Get positon from mouse and a random rotation
         var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var newPosition = new Vector3(mousePosition.x, mousePosition.y, 0);
-        var randomRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
+        var randomRotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360)));
         var bird = InitBird("Bird_" + m_Birds.Count, newPosition, randomRotation);
 
         // Add new bird into list

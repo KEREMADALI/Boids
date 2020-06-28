@@ -20,7 +20,7 @@ namespace FlockBehaviours
             var moveVector = Vector2.zero;
             var limitRadius = m_FlightArea.localScale.x;
 
-            if (Vector2.Distance(Vector2.zero, birdTransform.position) < limitRadius)
+            if (Vector3.SqrMagnitude(birdTransform.position) < (limitRadius * limitRadius))
             {
                 return moveVector;
             }
@@ -33,8 +33,6 @@ namespace FlockBehaviours
             {
                 moveVector = moveVector.normalized;
             }
-
-            Debug.Log($"Limit avoidancevector {moveVector.magnitude}");
 
             return moveVector;
         }   

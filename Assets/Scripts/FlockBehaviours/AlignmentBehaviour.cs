@@ -20,8 +20,6 @@ namespace FlockBehaviours
 
             neighbours.ForEach(x => alignmentVector += (Vector2)x.up / neighbours.Count);
 
-            Debug.Log($"Alignment vector: {alignmentVector.magnitude}");
-
             return alignmentVector;
         }
     }

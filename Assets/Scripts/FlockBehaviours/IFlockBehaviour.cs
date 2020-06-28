@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlockBehaviours
 {
-    internal interface IFlockBehaviour
+    public interface IFlockBehaviour
     {
         Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles);
     }
