@@ -8,11 +8,14 @@ namespace FlockBehaviours
     public class CohesionBehaviour : IFlockBehaviour
     {
         private float m_SmoothTime = 0.7f;
-        private Vector2 m_Velocity;
+        private Vector3 m_Velocity;
 
-        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours, List<Transform> obstacles)
+        public Vector3 CalculateMove(
+            Transform birdTransform,
+            IEnumerable<Transform> neighbours,
+            IEnumerable<Transform> obstacles)
         {
-            var cohesionVector = Vector2.zero;
+            var cohesionVector = Vector3.zero;
 
             if (!neighbours.Any())
             {
@@ -21,13 +24,13 @@ namespace FlockBehaviours
 
             foreach (var neighbour in neighbours)
             {
-                cohesionVector += (Vector2)neighbour.position;
+                cohesionVector += (Vector3)neighbour.position;
             }
 
-            cohesionVector = cohesionVector / neighbours.Count;
-            cohesionVector -= (Vector2)birdTransform.position;
+            cohesionVector = cohesionVector / neighbours.Count();
+            cohesionVector -= birdTransform.position;
 
-            cohesionVector = Vector2.SmoothDamp(birdTransform.up, cohesionVector, ref m_Velocity, m_SmoothTime);
+            cohesionVector = Vector3.SmoothDamp(birdTransform.up, cohesionVector, ref m_Velocity, m_SmoothTime);
 
             return cohesionVector;
         }

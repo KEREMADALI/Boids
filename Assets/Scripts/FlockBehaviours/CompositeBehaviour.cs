@@ -22,9 +22,12 @@ namespace FlockBehaviours
             };
         }
 
-        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles)
+        public Vector3 CalculateMove(
+            Transform transform,
+            IEnumerable<Transform> neighbours,
+            IEnumerable<Transform> obstacles)
         {
-            var moveVector = Vector2.zero;
+            var moveVector = Vector3.zero;
 
             if (!m_Behaviours.Any())
             {

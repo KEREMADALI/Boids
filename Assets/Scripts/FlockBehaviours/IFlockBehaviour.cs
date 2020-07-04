@@ -6,6 +6,9 @@ namespace FlockBehaviours
 {
     public interface IFlockBehaviour
     {
-        Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles);
+        Vector3 CalculateMove(
+            Transform transform, 
+            IEnumerable<Transform> neighbours, 
+            IEnumerable<Transform> obstacles);
     }
 }

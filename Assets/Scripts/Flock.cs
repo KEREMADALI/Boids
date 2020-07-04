@@ -1,7 +1,6 @@
 ﻿
 using FlockBehaviours;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -18,12 +17,12 @@ public class Flock : MonoBehaviour
     private const int m_XMax = 6;
     private const int m_YMax = 5;
 
-    public Vector2 FlockCenter
+    public Vector3 FlockCenter
     {
         get
         {
-            Vector2 center = Vector2.zero;
-            m_Birds.ForEach(x => center += (Vector2)x.Transform.position);
+            Vector3 center = Vector3.zero;
+            m_Birds.ForEach(x => center += (Vector3)x.Transform.position);
             center /= m_Birds.Count;
             return center;
         }
@@ -38,7 +37,7 @@ public class Flock : MonoBehaviour
     private void Update()
     {
         UpdateBirdPositions();
-        AddRunTimeBird();
+        AddBirdInRunTime();
     }
 
     /// <summary>
@@ -52,7 +51,7 @@ public class Flock : MonoBehaviour
         {
             // Get random initialization values
             var randomPosition = new Vector3(UnityEngine.Random.Range(-m_XMax, m_XMax), UnityEngine.Random.Range(-m_YMax, m_YMax));
-            var randomRotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360)));
+            var randomRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
             var bird = InitBird("Bird_" + i, randomPosition, randomRotation);
             m_Birds.Add(bird);
         } 
@@ -86,7 +85,8 @@ public class Flock : MonoBehaviour
         foreach (var bird in m_Birds)
         {
             var neighbours = bird.GetNeighbours();
-            var moveVector = m_Behaviour.CalculateMove(bird.Transform, neighbours, null);
+            var obstacles = bird.GetObstacles();
+            var moveVector = m_Behaviour.CalculateMove(bird.Transform, neighbours, obstacles);
             bird.Move(moveVector, Velocity);
         } 
     }
@@ -94,7 +94,7 @@ public class Flock : MonoBehaviour
     /// <summary>
     /// Adds birds on run time with a mouse click
     /// </summary>
-    private void AddRunTimeBird()
+    private void AddBirdInRunTime()
     {
         if (!Input.GetMouseButtonDown(0))
         {
@@ -104,7 +104,7 @@ public class Flock : MonoBehaviour
         // Get positon from mouse and a random rotation
         var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var newPosition = new Vector3(mousePosition.x, mousePosition.y, 0);
-        var randomRotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360)));
+        var randomRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
         var bird = InitBird("Bird_" + m_Birds.Count, newPosition, randomRotation);
 
         // Add new bird into list

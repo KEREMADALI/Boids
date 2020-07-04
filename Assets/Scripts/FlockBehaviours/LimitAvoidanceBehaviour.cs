@@ -15,9 +15,12 @@ namespace FlockBehaviours
             m_InputCenter = inputCenter;
         }
 
-        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours, List<Transform> obstacles)
+        public Vector3 CalculateMove(
+            Transform birdTransform,
+            IEnumerable<Transform> neighbours,
+            IEnumerable<Transform> obstacles)
         {
-            var moveVector = Vector2.zero;
+            var moveVector = Vector3.zero;
             var limitRadius = m_FlightArea.localScale.x;
 
             if (Vector3.SqrMagnitude(birdTransform.position) < (limitRadius * limitRadius))
@@ -25,8 +28,8 @@ namespace FlockBehaviours
                 return moveVector;
             }
 
-            var randomCenter = new Vector2(Random.Range(0,1), Random.Range(0,1));
-            moveVector = (Vector2)m_InputCenter.position +  randomCenter -(Vector2)birdTransform.position;
+            var randomCenter = new Vector3(Random.Range(0,1), Random.Range(0,1));
+            moveVector = m_InputCenter.position +  randomCenter -birdTransform.position;
             moveVector = (moveVector.magnitude - limitRadius) * moveVector.normalized;
 
             if (moveVector.magnitude > 1)

@@ -7,18 +7,19 @@ namespace FlockBehaviours
 {
     public class AlignmentBehaviour : IFlockBehaviour
     {
-        public Vector2 CalculateMove(Transform transform, List<Transform> neighbours, List<Transform> obstacles)
+        public Vector3 CalculateMove(Transform transform, IEnumerable<Transform> neighbours, IEnumerable<Transform> obstacles)
         {
-            Vector2 alignmentVector = transform.up;
+            Vector3 alignmentVector = transform.up;
 
             if (!neighbours.Any())
             {
                 return alignmentVector;
             }
 
-            alignmentVector = Vector2.zero;
+            alignmentVector = Vector3.zero;
 
-            neighbours.ForEach(x => alignmentVector += (Vector2)x.up / neighbours.Count);
+            neighbours.ToList().ForEach(x => alignmentVector += x.up);
+            alignmentVector /= neighbours.Count();
 
             return alignmentVector;
         }

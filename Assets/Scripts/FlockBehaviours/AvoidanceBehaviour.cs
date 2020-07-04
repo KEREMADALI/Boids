@@ -7,13 +7,17 @@ namespace FlockBehaviours
 {
     public class AvoidanceBehaviour : IFlockBehaviour
     {
-        private const float s_AvoidanceDistance = .25f;
+        protected readonly float s_AvoidanceDistance = .25f;
 
-        public Vector2 CalculateMove(Transform birdTransform, List<Transform> neighbours, List<Transform> obstacles)
+        public Vector3 CalculateMove(
+            Transform birdTransform, 
+            IEnumerable<Transform> neighbours, 
+            IEnumerable<Transform> obstacles)
         {
-            Vector2 avoidanceVector = Vector2.zero;
+            Vector3 avoidanceVector = Vector3.zero;
 
-            var closeNeighbours = neighbours.Where(x => Vector2.SqrMagnitude(birdTransform.position - x.position) < s_AvoidanceDistance);
+            var closeNeighbours = neighbours
+                .Where(x => Vector3.SqrMagnitude(birdTransform.position - x.position) < s_AvoidanceDistance);
 
             if (!closeNeighbours.Any())
             {
@@ -25,14 +29,15 @@ namespace FlockBehaviours
                 if (birdTransform.position == closeNeighbour.position)
                 {
                     // If two birds are at the same location 
-                    return new Vector2(Random.Range(1, 5), Random.Range(1, 5)).normalized;
+                    return new Vector3(Random.Range(1, 5), Random.Range(1, 5)).normalized;
                 }             
 
-                avoidanceVector += (Vector2)(birdTransform.position - closeNeighbour.position);
+                avoidanceVector += birdTransform.position - closeNeighbour.position;
             }
 
             avoidanceVector = avoidanceVector / closeNeighbours.Count();
-            avoidanceVector = (s_AvoidanceDistance - avoidanceVector.magnitude) / s_AvoidanceDistance * avoidanceVector.normalized;
+            avoidanceVector = (s_AvoidanceDistance - avoidanceVector.magnitude) 
+                / s_AvoidanceDistance * avoidanceVector.normalized;
 
             return avoidanceVector;
         }
